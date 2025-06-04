@@ -12,19 +12,19 @@
     </script>
   </head>
   <body class="bg-white">
-    <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+    <%!-- <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
       <%= if @current_admin do %>
         <li class="text-[0.8125rem] leading-6 text-zinc-900">
           {@current_admin.email}
         </li>
-        <%!-- <li>
+        <li>
           <.link
             href={~p"/admins/settings"}
             class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
           >
             Settings
           </.link>
-        </li> --%>
+        </li>
         <li>
           <.link
             href={~p"/admins/log_out"}
@@ -44,6 +44,31 @@
           </.link>
         </li>
       <% end %>
+    </ul> --%>
+    <ul
+      :if={@current_admin}
+      class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end"
+    >
+      <li class="text-[0.8125rem] leading-6 text-zinc-900">
+        {@current_admin.email}
+      </li>
+      <li>
+        <.link
+          href={~p"/admins/blogs"}
+          class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+        >
+          Blogs
+        </.link>
+      </li>
+      <li>
+        <.link
+          href={~p"/admins/log_out"}
+          method="delete"
+          class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+        >
+          Log out
+        </.link>
+      </li>
     </ul>
     {@inner_content}
   </body>

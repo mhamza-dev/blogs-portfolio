@@ -60,15 +60,21 @@ defmodule BlogsPortfolioWeb.Router do
     post "/admins/log_in", AdminSessionController, :create
   end
 
-  # scope "/", BlogsPortfolioWeb do
-  #   pipe_through [:browser, :require_authenticated_admin]
+  scope "/", BlogsPortfolioWeb do
+    pipe_through [:browser, :require_authenticated_admin]
 
-  #   live_session :require_authenticated_admin,
-  #     on_mount: [{BlogsPortfolioWeb.AdminAuth, :ensure_authenticated}] do
-  #     live "/admins/settings", AdminSettingsLive, :edit
-  #     live "/admins/settings/confirm_email/:token", AdminSettingsLive, :confirm_email
-  #   end
-  # end
+    live_session :require_authenticated_admin,
+      on_mount: [{BlogsPortfolioWeb.AdminAuth, :ensure_authenticated}] do
+      # live "/admins/settings", AdminSettingsLive, :edit
+      # live "/admins/settings/confirm_email/:token", AdminSettingsLive, :confirm_email
+      scope "/admins/blogs", Admin.BlogsLive do
+        live "/", Index, :index
+        live "/new", Index, :new
+        live "/:id/edit", Index, :edit
+        live "/:id/show", Show, :show
+      end
+    end
+  end
 
   scope "/", BlogsPortfolioWeb do
     pipe_through [:browser]

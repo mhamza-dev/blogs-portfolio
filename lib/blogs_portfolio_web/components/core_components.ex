@@ -477,6 +477,7 @@ defmodule BlogsPortfolioWeb.CoreComponents do
       <table class="w-[40rem] mt-11 sm:w-full">
         <thead class="text-sm text-left leading-6 text-zinc-500">
           <tr>
+            <th class="p-0 pb-4 pr-6 font-normal">Sr No.</th>
             <th :for={col <- @col} class="p-0 pb-4 pr-6 font-normal">{col[:label]}</th>
             <th :if={@action != []} class="relative p-0 pb-4">
               <span class="sr-only">{gettext("Actions")}</span>
@@ -488,7 +489,19 @@ defmodule BlogsPortfolioWeb.CoreComponents do
           phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
           class="relative divide-y divide-zinc-100 border-t border-zinc-200 text-sm leading-6 text-zinc-700"
         >
-          <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50">
+          <tr
+            :for={{row, index} <- Enum.with_index(@rows)}
+            id={@row_id && @row_id.(row)}
+            class="group hover:bg-zinc-50"
+          >
+            <td class="relative p-0 w-14">
+              <div class="block py-4 pr-6">
+                <span class="absolute -inset-y-px right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
+                <span class={["relative font-semibold text-zinc-900"]}>
+                  {index + 1}
+                </span>
+              </div>
+            </td>
             <td
               :for={{col, i} <- Enum.with_index(@col)}
               phx-click={@row_click && @row_click.(row)}
