@@ -1,0 +1,36 @@
+defmodule BlogsPortfolio.ContentFixtures do
+  @moduledoc """
+  This module defines test helpers for creating
+  entities via the `BlogsPortfolio.Content` context.
+  """
+
+  @doc """
+  Generate a blog_post.
+  """
+  def blog_post_fixture(attrs \\ %{}) do
+    {:ok, blog_post} =
+      attrs
+      |> Enum.into(%{
+        content: "some content",
+        title: "some title"
+      })
+      |> BlogsPortfolio.Content.create_blog_post()
+
+    blog_post
+  end
+
+  @doc """
+  Generate a hero_content.
+  """
+  def hero_content_fixture(attrs \\ %{}) do
+    {:ok, hero_content} =
+      attrs
+      |> Enum.into(%{
+        bio: "some bio",
+        title: "some title"
+      })
+      |> BlogsPortfolio.Content.create_hero_content()
+
+    hero_content
+  end
+end
