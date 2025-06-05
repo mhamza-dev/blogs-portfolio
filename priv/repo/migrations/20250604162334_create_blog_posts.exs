@@ -5,7 +5,7 @@ defmodule BlogsPortfolio.Repo.Migrations.CreateBlogPosts do
     create table(:blog_posts, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :title, :string
-      add :content, :text
+      add :body, :text
 
       timestamps(type: :utc_datetime)
     end

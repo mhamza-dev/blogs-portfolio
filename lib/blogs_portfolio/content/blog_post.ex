@@ -6,7 +6,7 @@ defmodule BlogsPortfolio.Content.BlogPost do
   @foreign_key_type :binary_id
   schema "blog_posts" do
     field :title, :string
-    field :content, :string
+    field :body, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -14,7 +14,7 @@ defmodule BlogsPortfolio.Content.BlogPost do
   @doc false
   def changeset(blog_post, attrs) do
     blog_post
-    |> cast(attrs, [:title, :content])
-    |> validate_required([:title, :content])
+    |> cast(attrs, [:title, :body])
+    |> validate_required([:title, :body])
   end
 end
