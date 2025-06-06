@@ -276,7 +276,7 @@ defmodule BlogsPortfolioWeb.CoreComponents do
   attr :type, :string,
     default: "text",
     values: ~w(checkbox color date datetime-local email file month number password
-               range search select tel text textarea time url week)
+               range search select tel text textarea time url week hidden)
 
   attr :field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
@@ -494,7 +494,7 @@ defmodule BlogsPortfolioWeb.CoreComponents do
             id={@row_id && @row_id.(row)}
             class="group hover:bg-zinc-50"
           >
-            <td class="relative p-0 w-14">
+            <td class="relative p-0 w-24">
               <div class="block py-4 pr-6">
                 <span class="absolute -inset-y-px right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
                 <span class={["relative font-semibold text-zinc-900"]}>
@@ -505,6 +505,7 @@ defmodule BlogsPortfolioWeb.CoreComponents do
             <td
               :for={{col, i} <- Enum.with_index(@col)}
               phx-click={@row_click && @row_click.(row)}
+              phx-value-id={@row_id && @row_id.(row)}
               class={["relative p-0", @row_click && "hover:cursor-pointer"]}
             >
               <div class="block py-4 pr-6">
@@ -607,6 +608,55 @@ defmodule BlogsPortfolioWeb.CoreComponents do
   def icon(%{name: "hero-" <> _} = assigns) do
     ~H"""
     <span class={[@name, @class]} />
+    """
+  end
+
+  attr :field, Phoenix.HTML.FormField, required: true
+  attr :label, :string
+
+  def trix_editor(assigns) do
+    ~H"""
+    <div>
+      <.input
+        field={@field}
+        id={@field.id}
+        type="hidden"
+        label={@label}
+        phx-hook="Trix"
+        phx-debounce="blur"
+      />
+      <div id="trix-editor-container" phx-update="ignore">
+        <trix-editor input={@field.id}></trix-editor>
+      </div>
+    </div>
+    """
+  end
+
+  @doc """
+  Renders a date.
+
+  ## Examples
+
+      <.date date={@date} />
+      <.date date={@date} format="MMM D, YY h:mm A" />
+
+  Date format should be a valid moment.js format.
+  See [moment.js documentation](https://momentjs.com/docs/#/displaying/format/) for more details.
+  """
+  attr :date, :any, required: true
+  attr :format, :string, default: "MMM D, YY h:mm A"
+  attr :class, :string, default: ""
+
+  def date(assigns) do
+    ~H"""
+    <span
+      id={"date-#{:rand.uniform(1000000)}"}
+      class={["text-sm text-gray-500", @class]}
+      phx-hook="DateFormatter"
+      data-date={DateTime.to_string(@date)}
+      data-format={@format}
+    >
+    </span>
     """
   end
 

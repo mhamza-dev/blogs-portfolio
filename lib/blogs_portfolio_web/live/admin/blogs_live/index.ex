@@ -8,13 +8,15 @@ defmodule BlogsPortfolioWeb.Admin.BlogsLive.Index do
 
   def render(assigns) do
     ~H"""
-    <div>
-      <h1>Blogs</h1>
+    <div class="mx-auto mt-32 px-20 max-w-8xl">
+      <.header>
+        Blogs
+      </.header>
       <.modal
         :if={@live_action in [:new, :edit]}
         id={if @live_action == :new, do: "blog-modal-new", else: "blog-modal-#{@blog && @blog.id}"}
         on_cancel={JS.navigate(~p"/admins/blogs")}
-        show
+        show={@live_action in [:new, :edit]}
       >
         <.live_component
           module={FormComponent}
@@ -23,18 +25,23 @@ defmodule BlogsPortfolioWeb.Admin.BlogsLive.Index do
           live_action={@live_action}
         />
       </.modal>
-      <.link href={~p"/admins/blogs/new"} class="flex justify-end items-center gap-2 ">
+      <.link navigate={~p"/admins/blogs/new"} class="flex justify-end items-center gap-2 ">
         <.icon name="hero-plus" class="w-4 h-4" /> New Blog
       </.link>
 
-      <.table id="blog-posts" rows={@blog_posts} row_id={:id}>
+      <.table
+        id="blog-posts"
+        rows={@blog_posts}
+        row_id={fn blog_post -> blog_post.id end}
+        row_click={fn _ -> "show" end}
+      >
         <:col :let={blog_post} label="Title">
           <.link href={~p"/admins/blogs/#{blog_post.id}/show"}>
             {blog_post.title}
           </.link>
         </:col>
         <:col :let={blog_post} label="Created At">
-          {Timex.format!(blog_post.created_at, "{0M}/{0D}/{0Y}")}
+          <.date date={blog_post.inserted_at} />
         </:col>
         <:action :let={blog_post}>
           <.link href={~p"/admins/blogs/#{blog_post.id}/edit"}>
@@ -56,7 +63,9 @@ defmodule BlogsPortfolioWeb.Admin.BlogsLive.Index do
   end
 
   def handle_params(params, _url, socket) do
-    {:noreply, socket |> apply_action(params, socket.assigns.live_action)}
+    IO.inspect(params)
+    IO.inspect(socket.assigns.live_action)
+    {:noreply, apply_action(socket, params, socket.assigns.live_action)}
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
@@ -69,6 +78,10 @@ defmodule BlogsPortfolioWeb.Admin.BlogsLive.Index do
       {:error, _} ->
         {:noreply, put_flash(socket, :error, "Failed to delete blog post")}
     end
+  end
+
+  def handle_event("show", %{"id" => id}, socket) do
+    {:noreply, push_navigate(socket, to: ~p"/admins/blogs/#{id}/show")}
   end
 
   defp apply_action(socket, _, :index) do

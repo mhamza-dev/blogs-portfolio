@@ -24,27 +24,27 @@ defmodule BlogsPortfolioWeb.PageLive do
       blog_posts: [
         %{
           title: "New Heights with Devfest Lahore 2023",
-          created_at: ~U[2024-01-10T10:00:00Z]
+          inserted_at: ~U[2024-01-10T10:00:00Z]
         },
         %{
           title: "Quickly Dockerize your Apps with CloudUp",
-          created_at: ~U[2023-02-04T10:00:00Z]
+          inserted_at: ~U[2023-02-04T10:00:00Z]
         },
         %{
           title: "Announcing Delta for Elixir",
-          created_at: ~U[2021-08-13T10:00:00Z]
+          inserted_at: ~U[2021-08-13T10:00:00Z]
         },
         %{
           title: "Association Defaults in Ecto",
-          created_at: ~U[2021-03-25T10:00:00Z]
+          inserted_at: ~U[2021-03-25T10:00:00Z]
         },
         %{
           title: "Interview by José Valim @ Dashbit",
-          created_at: ~U[2021-01-12T10:00:00Z]
+          inserted_at: ~U[2021-01-12T10:00:00Z]
         },
         %{
           title: "Devfest 2020 Virtual",
-          created_at: ~U[2020-10-19T10:00:00Z]
+          inserted_at: ~U[2020-10-19T10:00:00Z]
         }
       ]
     )
@@ -75,7 +75,7 @@ defmodule BlogsPortfolioWeb.PageLive do
           <ul class="space-y-2 text-sm">
             <li :for={post <- @blog_posts}>
               <span class="text-gray-400 mr-2">
-                {Timex.format!(post.created_at, "{0M} {0D} '{YY}")}
+                {Timex.format!(post.inserted_at, "{0M} {0D} '{YY}")}
               </span>
               {post.title}
             </li>

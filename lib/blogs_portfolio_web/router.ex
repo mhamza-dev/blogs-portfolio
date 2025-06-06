@@ -63,6 +63,9 @@ defmodule BlogsPortfolioWeb.Router do
   scope "/", BlogsPortfolioWeb do
     pipe_through [:browser, :require_authenticated_admin]
 
+    post "/trix-uploads", TrixUploadController, :create
+    delete "/trix-uploads", TrixUploadController, :delete
+
     live_session :require_authenticated_admin,
       on_mount: [{BlogsPortfolioWeb.AdminAuth, :ensure_authenticated}] do
       # live "/admins/settings", AdminSettingsLive, :edit

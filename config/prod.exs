@@ -11,6 +11,14 @@ config :blogs_portfolio, BlogsPortfolioWeb.Endpoint,
 # Configures Swoosh API Client
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: BlogsPortfolio.Finch
 
+config :blogs_portfolio, :uploader, adapter: Clients.Storage.S3
+
+config :blogs_portfolio,
+  s3_region: "us-east-1",
+  s3_access_key_id: System.get_env("S3_ACCESS_KEY_ID"),
+  s3_secret_key_access: System.get_env("S3_SECRET_KEY_ACCESS"),
+  s3_bucket_name: System.get_env("S3_BUCKET_NAME")
+
 # Disable Swoosh Local Memory Storage
 config :swoosh, local: false
 

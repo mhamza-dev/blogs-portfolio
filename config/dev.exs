@@ -65,6 +65,8 @@ config :blogs_portfolio, BlogsPortfolioWeb.Endpoint,
 # Enable dev routes for dashboard and mailbox
 config :blogs_portfolio, dev_routes: true
 
+config :blogs_portfolio, :uploader, adapter: Clients.Storage.Local
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
