@@ -17,8 +17,10 @@ defmodule BlogsPortfolio.Content do
       [%BlogPost{}, ...]
 
   """
-  def list_blog_posts do
-    Repo.all(BlogPost)
+  def list_blog_posts(limit \\ nil) do
+    query = BlogPost |> order_by(desc: :inserted_at)
+    query = if limit, do: query |> limit(^limit), else: query
+    query |> Repo.all()
   end
 
   @doc """

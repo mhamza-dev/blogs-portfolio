@@ -21,6 +21,11 @@ defmodule BlogsPortfolioWeb.Router do
     pipe_through :browser
 
     live "/", PageLive
+
+    scope "/blogs", UserLive do
+      live "/", BlogIndex, :index
+      live "/:id", BlogShow, :show
+    end
   end
 
   # Other scopes may use custom stacks.

@@ -5,7 +5,7 @@ defmodule BlogsPortfolioWeb.PageLive do
 
   def mount(_params, _session, socket) do
     hero_content = Content.list_hero_contents() |> List.first()
-    blog_posts = Content.list_blog_posts()
+    blog_posts = Content.list_blog_posts(3)
 
     {:ok,
      socket
@@ -46,9 +46,17 @@ defmodule BlogsPortfolioWeb.PageLive do
               <span class="text-gray-400 mr-2">
                 <.date date={post.inserted_at} format="MMM DD, YY" />
               </span>
-              {post.title}
+              <.link navigate={~p"/blogs/#{post.id}"} class="text-gray-600 hover:text-gray-800">
+                {post.title}
+              </.link>
             </li>
           </ul>
+          <.link
+            navigate={~p"/blogs"}
+            class="mt-6 text-gray-600 space-x-2 text-sm hover:text-gray-800"
+          >
+            View All Blogs <.icon name="hero-arrow-right" class="w-4 h-4" />
+          </.link>
         </div>
       </div>
     </div>
