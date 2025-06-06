@@ -60,7 +60,7 @@ defmodule BlogsPortfolioWeb.CoreComponents do
         tabindex="0"
       >
         <div class="flex min-h-full items-center justify-center">
-          <div class="w-full max-w-3xl p-4 sm:p-6 lg:py-8">
+          <div class="w-full max-w-5xl p-4 sm:p-6 lg:py-8">
             <.focus_wrap
               id={"#{@id}-container"}
               phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
@@ -569,13 +569,14 @@ defmodule BlogsPortfolioWeb.CoreComponents do
   """
   attr :navigate, :any, required: true
   slot :inner_block, required: true
+  attr :div_class, :string, default: ""
 
   def back(assigns) do
     ~H"""
-    <div class="mt-16">
+    <div class={@div_class}>
       <.link
         navigate={@navigate}
-        class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+        class="flex gap-2 items-center text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
       >
         <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
         {render_slot(@inner_block)}
@@ -611,8 +612,11 @@ defmodule BlogsPortfolioWeb.CoreComponents do
     """
   end
 
+  @doc """
+  Renders a Trix editor.
+  """
   attr :field, Phoenix.HTML.FormField, required: true
-  attr :label, :string
+  attr :label, :string, default: nil
 
   def trix_editor(assigns) do
     ~H"""
@@ -625,8 +629,8 @@ defmodule BlogsPortfolioWeb.CoreComponents do
         phx-hook="Trix"
         phx-debounce="blur"
       />
-      <div id="trix-editor-container" phx-update="ignore">
-        <trix-editor input={@field.id}></trix-editor>
+      <div id="trix-editor-container" phx-update="ignore" class="max-h-[500px] overflow-y-auto">
+        <trix-editor input={@field.id} class="min-h-[200px]"></trix-editor>
       </div>
     </div>
     """

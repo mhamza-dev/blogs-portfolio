@@ -7,7 +7,7 @@ defmodule BlogsPortfolioWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_blogs_portfolio_key",
-    signing_salt: "honGj3F2",
+    signing_salt: "LgTNhWlH",
     same_site: "Lax"
   ]
 
@@ -24,6 +24,12 @@ defmodule BlogsPortfolioWeb.Endpoint do
     from: :blogs_portfolio,
     gzip: false,
     only: BlogsPortfolioWeb.static_paths()
+
+  # Serve at "/uploads" the static files from "priv/static/uploads" directory.
+  plug Plug.Static,
+    at: "/uploads",
+    from: Path.join(:code.priv_dir(:blogs_portfolio), "static/uploads"),
+    gzip: false
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

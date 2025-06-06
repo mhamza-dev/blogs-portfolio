@@ -33,5 +33,5 @@
 /* Override default table styles */
 
 ul > li {
-  list-style: initial !important;
+  list-style: initial;
 }

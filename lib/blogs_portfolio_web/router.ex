@@ -72,8 +72,8 @@ defmodule BlogsPortfolioWeb.Router do
       # live "/admins/settings/confirm_email/:token", AdminSettingsLive, :confirm_email
       scope "/admins/blogs", Admin.BlogsLive do
         live "/", Index, :index
-        live "/new", Index, :new
-        live "/:id/edit", Index, :edit
+        live "/new", Form, :new
+        live "/:id/edit", Form, :edit
         live "/:id/show", Show, :show
       end
     end

@@ -12,6 +12,7 @@ export default {
     element.editor.element.addEventListener(
       "trix-attachment-add",
       function (event) {
+        console.log("trix-attachment-add", event);
         if (event.attachment.file) uploadFileAttachment(event.attachment);
       }
     );
@@ -24,6 +25,7 @@ export default {
       }
     );
     function uploadFileAttachment(attachment) {
+      console.log("uploadFileAttachment", attachment);
       uploadFile(attachment.file, setProgress, setAttributes);
 
       function setProgress(progress) {
@@ -48,17 +50,30 @@ export default {
       xhr.send(formData);
     }
 
+    // Create FormData object for file upload
+    function createFormData(file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      return formData;
+    }
+
     // Upload file
     function uploadFile(file, progressCallback, successCallback) {
+      console.log("uploadFile", file);
       const formData = createFormData(file);
       const csrfToken = document
         .querySelector("meta[name='csrf-token']")
         .getAttribute("content");
       const xhr = new XMLHttpRequest();
 
+      console.log("formData", formData);
+      console.log("csrfToken", csrfToken);
+      console.log("xhr", xhr);
       // Send a POST request to the route previously defined in `router.ex`
       xhr.open("POST", "/trix-uploads", true);
+      console.log("xhr.open", xhr.open);
       xhr.setRequestHeader("X-CSRF-Token", csrfToken);
+      console.log("xhr.setRequestHeader", xhr.setRequestHeader);
 
       xhr.upload.addEventListener("progress", function (event) {
         if (event.lengthComputable) {

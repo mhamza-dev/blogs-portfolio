@@ -2,41 +2,20 @@ defmodule BlogsPortfolioWeb.Admin.BlogsLive.Index do
   use BlogsPortfolioWeb, :live_view
 
   alias BlogsPortfolio.Content
-  alias BlogsPortfolio.Content.BlogPost
-
-  alias BlogsPortfolioWeb.Admin.BlogsLive.FormComponent
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto mt-32 px-20 max-w-8xl">
+    <div class="mx-auto px-20 max-w-8xl">
       <.header>
         Blogs
       </.header>
-      <.modal
-        :if={@live_action in [:new, :edit]}
-        id={if @live_action == :new, do: "blog-modal-new", else: "blog-modal-#{@blog && @blog.id}"}
-        on_cancel={JS.navigate(~p"/admins/blogs")}
-        show={@live_action in [:new, :edit]}
-      >
-        <.live_component
-          module={FormComponent}
-          id="blog-form"
-          blog={@blog}
-          live_action={@live_action}
-        />
-      </.modal>
       <.link navigate={~p"/admins/blogs/new"} class="flex justify-end items-center gap-2 ">
         <.icon name="hero-plus" class="w-4 h-4" /> New Blog
       </.link>
 
-      <.table
-        id="blog-posts"
-        rows={@blog_posts}
-        row_id={fn blog_post -> blog_post.id end}
-        row_click={fn _ -> "show" end}
-      >
+      <.table id="blog-posts" rows={@blog_posts} row_id={fn blog_post -> blog_post.id end}>
         <:col :let={blog_post} label="Title">
-          <.link href={~p"/admins/blogs/#{blog_post.id}/show"}>
+          <.link navigate={~p"/admins/blogs/#{blog_post.id}/show"}>
             {blog_post.title}
           </.link>
         </:col>
@@ -44,7 +23,7 @@ defmodule BlogsPortfolioWeb.Admin.BlogsLive.Index do
           <.date date={blog_post.inserted_at} />
         </:col>
         <:action :let={blog_post}>
-          <.link href={~p"/admins/blogs/#{blog_post.id}/edit"}>
+          <.link navigate={~p"/admins/blogs/#{blog_post.id}/edit"}>
             <.icon name="hero-pencil" class="w-4 h-4" />
           </.link>
         </:action>
@@ -59,13 +38,7 @@ defmodule BlogsPortfolioWeb.Admin.BlogsLive.Index do
   end
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :blog_posts, Content.list_blog_posts())}
-  end
-
-  def handle_params(params, _url, socket) do
-    IO.inspect(params)
-    IO.inspect(socket.assigns.live_action)
-    {:noreply, apply_action(socket, params, socket.assigns.live_action)}
+    {:ok, socket |> assign(blog_posts: Content.list_blog_posts(), page_title: "Blogs")}
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
@@ -82,23 +55,6 @@ defmodule BlogsPortfolioWeb.Admin.BlogsLive.Index do
 
   def handle_event("show", %{"id" => id}, socket) do
     {:noreply, push_navigate(socket, to: ~p"/admins/blogs/#{id}/show")}
-  end
-
-  defp apply_action(socket, _, :index) do
-    socket
-    |> assign(:page_title, "Blogs")
-  end
-
-  defp apply_action(socket, _, :new) do
-    socket
-    |> assign(:page_title, "New Blog")
-    |> assign(:blog, %BlogPost{})
-  end
-
-  defp apply_action(socket, %{"id" => id}, :edit) do
-    socket
-    |> assign(:page_title, "Edit Blog")
-    |> assign(:blog, Content.get_blog_post!(id))
   end
 
   def handle_info({:update_list, blog}, socket) do

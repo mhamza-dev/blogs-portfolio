@@ -92,14 +92,4 @@ module.exports = {
       );
     }),
   ],
-  corePlugins: {
-    preflight: true,
-  },
-  important: true,
-  future: {
-    hoverOnlyWhenSupported: true,
-  },
-  experimental: {
-    optimizeUniversalDefaults: true,
-  },
 };
