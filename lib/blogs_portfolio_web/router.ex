@@ -76,6 +76,10 @@ defmodule BlogsPortfolioWeb.Router do
         live "/:id/edit", Form, :edit
         live "/:id/show", Show, :show
       end
+
+      scope "/admins/hero-content", Admin.HeroContentLive do
+        live "/", Form
+      end
     end
   end
 

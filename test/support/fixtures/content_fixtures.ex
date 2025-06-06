@@ -33,4 +33,18 @@ defmodule BlogsPortfolio.ContentFixtures do
 
     hero_content
   end
+
+  @doc """
+  Generate a social_link.
+  """
+  def social_link_fixture(attrs \\ %{}) do
+    {:ok, social_link} =
+      attrs
+      |> Enum.into(%{
+        type: :github
+      })
+      |> BlogsPortfolio.Content.create_social_link()
+
+    social_link
+  end
 end

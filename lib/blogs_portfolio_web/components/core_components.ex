@@ -612,6 +612,15 @@ defmodule BlogsPortfolioWeb.CoreComponents do
     """
   end
 
+  attr :name, :string, required: true
+  attr :class, :string, default: "text-xl text-gray-600 hover:text-black"
+
+  def font_awesome_icon(assigns) do
+    ~H"""
+    <i class={"fab fa-#{@name} #{@class}"} />
+    """
+  end
+
   @doc """
   Renders a Trix editor.
   """

@@ -114,7 +114,7 @@ defmodule BlogsPortfolio.Content do
 
   """
   def list_hero_contents do
-    Repo.all(HeroContent)
+    HeroContent |> Repo.all() |> Repo.preload(:social_links)
   end
 
   @doc """
@@ -196,5 +196,101 @@ defmodule BlogsPortfolio.Content do
   """
   def change_hero_content(%HeroContent{} = hero_content, attrs \\ %{}) do
     HeroContent.changeset(hero_content, attrs)
+  end
+
+  alias BlogsPortfolio.Content.SocialLink
+
+  @doc """
+  Returns the list of social_link.
+
+  ## Examples
+
+      iex> list_social_link()
+      [%SocialLink{}, ...]
+
+  """
+  def list_social_link do
+    Repo.all(SocialLink)
+  end
+
+  @doc """
+  Gets a single social_link.
+
+  Raises `Ecto.NoResultsError` if the Social link does not exist.
+
+  ## Examples
+
+      iex> get_social_link!(123)
+      %SocialLink{}
+
+      iex> get_social_link!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_social_link!(id), do: Repo.get!(SocialLink, id)
+
+  @doc """
+  Creates a social_link.
+
+  ## Examples
+
+      iex> create_social_link(%{field: value})
+      {:ok, %SocialLink{}}
+
+      iex> create_social_link(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_social_link(attrs \\ %{}) do
+    %SocialLink{}
+    |> SocialLink.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a social_link.
+
+  ## Examples
+
+      iex> update_social_link(social_link, %{field: new_value})
+      {:ok, %SocialLink{}}
+
+      iex> update_social_link(social_link, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_social_link(%SocialLink{} = social_link, attrs) do
+    social_link
+    |> SocialLink.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a social_link.
+
+  ## Examples
+
+      iex> delete_social_link(social_link)
+      {:ok, %SocialLink{}}
+
+      iex> delete_social_link(social_link)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_social_link(%SocialLink{} = social_link) do
+    Repo.delete(social_link)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking social_link changes.
+
+  ## Examples
+
+      iex> change_social_link(social_link)
+      %Ecto.Changeset{data: %SocialLink{}}
+
+  """
+  def change_social_link(%SocialLink{} = social_link, attrs \\ %{}) do
+    SocialLink.changeset(social_link, attrs)
   end
 end
