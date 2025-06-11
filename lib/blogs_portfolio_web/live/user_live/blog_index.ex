@@ -4,7 +4,7 @@ defmodule BlogsPortfolioWeb.UserLive.BlogIndex do
   alias BlogsPortfolio.Content
 
   def mount(_params, _session, socket) do
-    blog_posts = Content.list_blog_posts()
+    blog_posts = Content.list_blog_posts(order_by: [desc: :inserted_at])
 
     {:ok,
      socket

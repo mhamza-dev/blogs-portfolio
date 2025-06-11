@@ -17,10 +17,18 @@ defmodule BlogsPortfolio.Content do
       [%BlogPost{}, ...]
 
   """
-  def list_blog_posts(limit \\ nil) do
-    query = BlogPost |> order_by(desc: :inserted_at)
-    query = if limit, do: query |> limit(^limit), else: query
-    query |> Repo.all()
+  def list_blog_posts(query_params \\ []) do
+    Enum.reduce(query_params, BlogPost, fn {key, value}, query ->
+      case key do
+        :limit -> query |> limit(^value)
+        :offset -> query |> offset(^value)
+        :order_by -> query |> order_by(^value)
+        :where -> query |> where(^value)
+        :preload -> query |> preload(^value)
+        _ -> query
+      end
+    end)
+    |> Repo.all()
   end
 
   @doc """
@@ -89,6 +97,12 @@ defmodule BlogsPortfolio.Content do
   """
   def delete_blog_post(%BlogPost{} = blog_post) do
     Repo.delete(blog_post)
+  end
+
+  def delete_blog_post(id) when is_binary(id) do
+    id
+    |> get_blog_post!()
+    |> delete_blog_post()
   end
 
   @doc """

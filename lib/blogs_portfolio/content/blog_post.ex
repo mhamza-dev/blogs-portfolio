@@ -14,7 +14,7 @@ defmodule BlogsPortfolio.Content.BlogPost do
   @doc false
   def changeset(blog_post, attrs) do
     blog_post
-    |> cast(attrs, [:title, :body])
+    |> cast(attrs, [:title, :body, :inserted_at])
     |> validate_required([:title, :body])
   end
 end

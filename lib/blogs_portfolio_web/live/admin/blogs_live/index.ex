@@ -38,15 +38,26 @@ defmodule BlogsPortfolioWeb.Admin.BlogsLive.Index do
   end
 
   def mount(_params, _session, socket) do
-    {:ok, socket |> assign(blog_posts: Content.list_blog_posts(), page_title: "Blogs")}
+    {:ok,
+     socket
+     |> assign(
+       blog_posts: Content.list_blog_posts(order_by: [desc: :inserted_at]),
+       page_title: "Blogs"
+     )}
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
-    Content.delete_blog_post(id)
+    blog_post = Content.get_blog_post!(id)
+
+    Content.delete_blog_post(blog_post)
     |> case do
       {:ok, _} ->
         send(self(), {:delete_blog_post, id})
-        {:noreply, put_flash(socket, :info, "Blog post deleted successfully")}
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Blog post deleted successfully")
+         |> push_navigate(to: ~p"/admins/blogs")}
 
       {:error, _} ->
         {:noreply, put_flash(socket, :error, "Failed to delete blog post")}
@@ -77,5 +88,9 @@ defmodule BlogsPortfolioWeb.Admin.BlogsLive.Index do
 
   def handle_info({:create_blog_post, blog}, socket) do
     {:noreply, socket |> assign(:blog_posts, [blog | socket.assigns.blog_posts])}
+  end
+
+  def handle_params(_params, _url, socket) do
+    {:noreply, socket}
   end
 end

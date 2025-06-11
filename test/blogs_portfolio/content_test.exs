@@ -8,11 +8,22 @@ defmodule BlogsPortfolio.ContentTest do
 
     import BlogsPortfolio.ContentFixtures
 
-    @invalid_attrs %{title: nil, content: nil}
+    @invalid_attrs %{title: nil, body: nil}
 
     test "list_blog_posts/0 returns all blog_posts" do
       blog_post = blog_post_fixture()
       assert Content.list_blog_posts() == [blog_post]
+    end
+
+    test "list_blog_posts/1 with limit returns limited blog_posts" do
+      blog_post1 = blog_post_fixture(%{title: "First Post", body: "Content 1"})
+      blog_post2 = blog_post_fixture(%{title: "Second Post", body: "Content 2"})
+      blog_post_fixture(%{title: "Third Post", body: "Content 3"})
+
+      assert length(Content.list_blog_posts(limit: 2)) == 2
+      result_ids = Content.list_blog_posts(limit: 2) |> Enum.map(& &1.id)
+      assert blog_post1.id in result_ids
+      assert blog_post2.id in result_ids
     end
 
     test "get_blog_post!/1 returns the blog_post with given id" do
@@ -21,11 +32,11 @@ defmodule BlogsPortfolio.ContentTest do
     end
 
     test "create_blog_post/1 with valid data creates a blog_post" do
-      valid_attrs = %{title: "some title", content: "some content"}
+      valid_attrs = %{title: "some title", body: "some content"}
 
       assert {:ok, %BlogPost{} = blog_post} = Content.create_blog_post(valid_attrs)
       assert blog_post.title == "some title"
-      assert blog_post.content == "some content"
+      assert blog_post.body == "some content"
     end
 
     test "create_blog_post/1 with invalid data returns error changeset" do
@@ -34,11 +45,11 @@ defmodule BlogsPortfolio.ContentTest do
 
     test "update_blog_post/2 with valid data updates the blog_post" do
       blog_post = blog_post_fixture()
-      update_attrs = %{title: "some updated title", content: "some updated content"}
+      update_attrs = %{title: "some updated title", body: "some updated content"}
 
       assert {:ok, %BlogPost{} = blog_post} = Content.update_blog_post(blog_post, update_attrs)
       assert blog_post.title == "some updated title"
-      assert blog_post.content == "some updated content"
+      assert blog_post.body == "some updated content"
     end
 
     test "update_blog_post/2 with invalid data returns error changeset" do
@@ -66,9 +77,15 @@ defmodule BlogsPortfolio.ContentTest do
 
     @invalid_attrs %{title: nil, bio: nil}
 
-    test "list_hero_contents/0 returns all hero_contents" do
+    test "list_hero_contents/0 returns all hero_contents with preloaded social_links" do
       hero_content = hero_content_fixture()
-      assert Content.list_hero_contents() == [hero_content]
+      social_link = social_link_fixture(%{hero_content_id: hero_content.id})
+
+      [loaded_hero] = Content.list_hero_contents()
+      assert loaded_hero.id == hero_content.id
+      assert length(loaded_hero.social_links) == 1
+      [loaded_social] = loaded_hero.social_links
+      assert loaded_social.id == social_link.id
     end
 
     test "get_hero_content!/1 returns the hero_content with given id" do
@@ -137,11 +154,13 @@ defmodule BlogsPortfolio.ContentTest do
       assert Content.get_social_link!(social_link.id) == social_link
     end
 
-    test "create_social_link/1 with valid data creates a social_link" do
-      valid_attrs = %{type: :github}
+    test "create_social_link/1 with hero_content association creates a social_link" do
+      hero_content = hero_content_fixture()
+      valid_attrs = %{type: :github, hero_content_id: hero_content.id}
 
       assert {:ok, %SocialLink{} = social_link} = Content.create_social_link(valid_attrs)
       assert social_link.type == :github
+      assert social_link.hero_content_id == hero_content.id
     end
 
     test "create_social_link/1 with invalid data returns error changeset" do

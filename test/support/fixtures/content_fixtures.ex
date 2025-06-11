@@ -11,8 +11,9 @@ defmodule BlogsPortfolio.ContentFixtures do
     {:ok, blog_post} =
       attrs
       |> Enum.into(%{
-        content: "some content",
-        title: "some title"
+        body: "some content",
+        title: "some title",
+        inserted_at: DateTime.utc_now()
       })
       |> BlogsPortfolio.Content.create_blog_post()
 
@@ -41,7 +42,9 @@ defmodule BlogsPortfolio.ContentFixtures do
     {:ok, social_link} =
       attrs
       |> Enum.into(%{
-        type: :github
+        type: :github,
+        url: "https://github.com/test",
+        icon: "fa-github"
       })
       |> BlogsPortfolio.Content.create_social_link()
 

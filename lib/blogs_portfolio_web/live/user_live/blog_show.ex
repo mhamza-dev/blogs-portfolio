@@ -3,7 +3,13 @@ defmodule BlogsPortfolioWeb.UserLive.BlogShow do
   alias BlogsPortfolio.Content
 
   def mount(%{"id" => id}, _session, socket) do
-    {:ok, socket |> assign(:blog_post, Content.get_blog_post!(id))}
+    blog_post =
+      case Ecto.UUID.cast(id) do
+        {:ok, uuid} -> Content.get_blog_post!(uuid)
+        :error -> raise Ecto.NoResultsError, queryable: Content.BlogPost
+      end
+
+    {:ok, socket |> assign(:blog_post, blog_post)}
   end
 
   def render(assigns) do

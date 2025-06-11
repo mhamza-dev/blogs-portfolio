@@ -576,7 +576,7 @@ defmodule BlogsPortfolioWeb.CoreComponents do
     <div class={@div_class}>
       <.link
         navigate={@navigate}
-        class="flex gap-2 items-center text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+        class="back flex gap-2 items-center text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
       >
         <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
         {render_slot(@inner_block)}
@@ -638,7 +638,12 @@ defmodule BlogsPortfolioWeb.CoreComponents do
         phx-hook="Trix"
         phx-debounce="blur"
       />
-      <div id="trix-editor-container" phx-update="ignore" class="max-h-[500px] overflow-y-auto">
+      <div
+        id="trix-editor-container"
+        data-trix-editor
+        phx-update="ignore"
+        class="max-h-[500px] overflow-y-auto"
+      >
         <trix-editor input={@field.id} class="min-h-[200px]"></trix-editor>
       </div>
     </div>

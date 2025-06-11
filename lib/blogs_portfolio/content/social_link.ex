@@ -49,8 +49,8 @@ defmodule BlogsPortfolio.Content.SocialLink do
   @doc false
   def changeset(social_link, attrs) do
     social_link
-    |> cast(attrs, [:type, :url, :icon])
-    |> validate_required([:type, :url, :icon])
+    |> cast(attrs, [:type, :url, :icon, :hero_content_id])
+    |> validate_required([:type])
     |> validate_inclusion(:type, @social_handles)
     |> unique_constraint(:type, name: :social_link_type_index)
     |> unique_constraint(:url, name: :social_link_url_index)
